@@ -3,7 +3,7 @@
 use core::ffi::c_char;
 use core::ptr::NonNull;
 use pyo3_ffi::{
-    PyBytesObject, PyBytes_FromStringAndSize, PyObject, PyVarObject, Py_ssize_t, _PyBytes_Resize,
+    PyBytesObject, PyBytes_FromStringAndSize, PyObject, _PyBytes_Resize,
 };
 use std::io::Error;
 
@@ -34,7 +34,6 @@ impl BytesWriter {
     pub fn finish(&mut self) -> NonNull<PyObject> {
         unsafe {
             core::ptr::write(self.buffer_ptr(), 0);
-            (*self.bytes.cast::<PyVarObject>()).ob_size = self.len as Py_ssize_t;
             self.resize(self.len);
             self.bytes_ptr()
         }
